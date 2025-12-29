@@ -39,29 +39,28 @@ The project assumes the following directory structure:
 ```
 project_root/
 │
-├── myv3_cleaned.ipynb        # Main notebook (entry point)
+├── HSI-ReconClsNet.ipynb        # Main notebook (entry point)
 ├── README.md                 # This file
 │
 ├── data/
-│   ├── cube_001.npy          # Hyperspectral cube (H × W × Bands)
-│   ├── cube_001_mask.npy     # (Optional) Pixel-level labels or masks
+│   ├── cube_name         # Hyperspectral cube (H × W × Bands)
+│   │   ├── dataset_cache # folder contains the model and dataset generated to enable fast reloading
+│   │   │   └── ...
+│   │   │   # what below here need to be unzipped
+│   │   ├── cube.hdr         # cube's header file
+│   │   ├── cube.raw         # cube's raw data
+│   │   ├── DARKREF_cube.hdr # cube's dark current header file
+│   │   ├── DARKREF_cube.raw # cube's dark current raw data
+│   │   ├── cube_GT.npz      # cube's ground truth
+│   │   └── ...
+│   ├── Ref.csv             # reference csv continue the contamination material spectral
 │   └── ...
 │
-├── reference_spectra/
-│   ├── sugar.npy
-│   ├── polystyrene.npy
-│   ├── silicone.npy
+├── GT/
+│   ├── gt_map_maker.py # script to generate the ground truth (cube_GT.npz) easily 
+│   ├── readme_gt_maker.md
 │
-├── models/
-│   ├── reconnet.py           # (Optional) ReconNet architecture
-│   ├── clsnet.py             # (Optional) Classifier
-│
-├── utils/
-│   ├── preprocessing.py
-│   ├── augmentation.py
-│   └── visualization.py
-│
-└── requirements.txt
+└── 
 ```
 
 ---
