@@ -46,9 +46,9 @@ project_root/
 │   ├── cube_name         # Hyperspectral cube (H × W × Bands)
 │   │   ├── dataset_cache # folder contains the model and dataset generated to enable fast reloading
 │   │   │   └── ...
-│   │   │   # what below here need to be unzipped
+│   │   │   
 │   │   ├── cube.hdr         # cube's header file
-│   │   ├── cube.raw         # cube's raw data
+│   │   ├── cube.raw         # cube's raw data - need to be gunzip from git
 │   │   ├── DARKREF_cube.hdr # cube's dark current header file
 │   │   ├── DARKREF_cube.raw # cube's dark current raw data
 │   │   ├── cube_GT.npz      # cube's ground truth
@@ -70,39 +70,42 @@ project_root/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+clone https://github.com/sagialontech/HSI-ReconClsNet.git
+cd HSI-ReconClsNet
 ```
 
 ---
 
-### 2️⃣ Create environment (recommended)
+### 2️⃣ Create workspace - We used google colab
 
-```bash
-conda create -n hsi python=3.9
-conda activate hsi
-pip install -r requirements.txt
-```
+the notebook is ready to be uploaded as a colab notebook
+but can be run from any workspace as long globals and filesystem is correct
 
 ---
 
 ### 3️⃣ Prepare the data
 
-- Place **one hyperspectral cube** in `data/`
-- Cube shape must be: **(Height × Width × SpectralBands)**
-- Place **reference spectral signatures** (1D vectors) in `reference_spectra/`
+Look on the example under `data/ ` folder
+if you wish to use one of our cube just guzip the .raw splited files
 
-No multi-cube dataset is required.
+if you want your own cubes you need:
+- Place ** hyperspectral cube** in `data/`
+- Cube shape must be: **(Height × Width × SpectralBands)**
+- Place `Ref.csv`
+- the format of the cube need to be ENVI hyperspectral image.
+
 
 ---
 
-## 🧠 Notebook Usage (`myv3_cleaned.ipynb`)
+## 🧠 Notebook Usage (`HSI-ReconClsNet.ipynb`)
 
 ### Step 1 — Open notebook
 
 ```bash
-jupyter notebook myv3_cleaned.ipynb
+jupyter notebook HSI-ReconClsNet.ipynb
 ```
+or
+Upload to Colab
 
 ---
 
@@ -111,16 +114,44 @@ jupyter notebook myv3_cleaned.ipynb
 At the top of the notebook, edit the **Globals / Configuration** section:
 
 ```python
-CUBE_PATH = "data/cube_001.npy"
-REFERENCE_SPECTRA_DIR = "reference_spectra/"
-
-TRAIN_RATIO = 0.05
-NUM_EPOCHS_RECON = 50
-NUM_EPOCHS_CLS = 30
-
-USE_AUGMENTATION = True
-DEVICE = "cuda"
+BASE_DIR   = r"/content/drive/MyDrive/HSI"      # <-- EDIT TO YOUR PATH
+DATA_DIR   = rf"{BASE_DIR}/data"
+CUBE_NAME = "08-32-58"
+...
 ```
+
+you can change the hyperparamters from the golbal dict HP:
+```python
+# Model / training hyperparameters
+HP ={
+    # data related hyperparameters
+    "CLEAN_TRAIN_FRACTION": 0.3,
+    "N_SAMPLES": 10000,
+
+    # training related hyperparameters
+    "BATCH_SIZE": 64,
+    "STEP_LR_SIZE": 15,
+    "STEP_LR_GAMMA": 0.85,
+
+    # Recon train
+    "EPOCHS": 50,
+    "LR": 1e-4,
+    "LAMBDA_CORR": 1.0,
+
+    # Cls train
+    "EPOCHS_CLS": 50,
+    "LR_CLS": 1e-4,
+
+    # visual
+    "CORR_TH": 0.3,
+    "K_SMOOTH": 7,
+    "K_BLOCK" : 3,
+    "TRESH_BLOCK": 0.2,
+    "TRESH_POLY": 0.2,
+}
+...
+```
+
 
 ---
 
@@ -185,7 +216,7 @@ Pixel-wise Contamination Map
 
 **Limitations**
 - No cross-scene generalization
-- Retraining required per cube
+- Retraining required per cube 
 - Designed for scene-level analysis
 
 ---
@@ -201,8 +232,6 @@ Pixel-wise Contamination Map
 
 ## 📝 Citation
 
-If you use this work, please cite:
-
 ```
 Kendler, S. et al.
 Hyperspectral imaging for chemicals identification:
@@ -212,7 +241,3 @@ Scientific Reports, 2022
 
 ---
 
-## ✨ Final Note
-
-This repository prioritizes **clarity, interpretability, and practical deployment**
-over large-scale generalization.
