@@ -1,4 +1,4 @@
-# ReconClsNet
+# HSI-ReconClsNet
 
 # Scene-Adaptive Hyperspectral Chemical Identification
 ### Single-Cube Learning with Physics-Guided Augmentation
