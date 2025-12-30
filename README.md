@@ -125,13 +125,13 @@ you can change the hyperparamters from the golbal dict HP:
 # Model / training hyperparameters
 HP ={
     # data related hyperparameters
-    "CLEAN_TRAIN_FRACTION": 0.3,
-    "N_SAMPLES": 10000,
+    "CLEAN_TRAIN_FRACTION": 0.3, # Fraction of pixels assumed to be clean background and used to seed physics-guided augmentation.
+    "N_SAMPLES": 10000, # Number of synthetic training samples generated from the mixing model.
 
     # training related hyperparameters
-    "BATCH_SIZE": 64,
-    "STEP_LR_SIZE": 15,
-    "STEP_LR_GAMMA": 0.85,
+    "BATCH_SIZE": 64,  # Number of pixel spectra per training batch.
+    "STEP_LR_SIZE": 15, # Epoch interval for learning-rate decay.
+    "STEP_LR_GAMMA": 0.85, # Learning-rate decay factor.
 
     # Recon train
     "EPOCHS": 50,
@@ -143,11 +143,12 @@ HP ={
     "LR_CLS": 1e-4,
 
     # visual
-    "CORR_TH": 0.3,
-    "K_SMOOTH": 7,
-    "K_BLOCK" : 3,
-    "TRESH_BLOCK": 0.2,
-    "TRESH_POLY": 0.2,
+    "CORR_TH": 0.3, # Correlation threshold for the Naive baseline part
+    "K_SMOOTH": 7, # Kernel size for spatial smoothing. 
+    "K_BLOCK" : 3, # Block size for local aggregation.
+    "TRESH_BLOCK": 0.2, # Threshold for block-level contamination decision.
+    "TRESH_POLY": 0.2, # Threshold for polygon-level contamination decision.
+
 }
 ...
 ```
